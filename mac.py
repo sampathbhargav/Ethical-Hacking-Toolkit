@@ -12,13 +12,40 @@ def currentmac():
     # using regex expression
     if platform == "linux" or platform == "linux2":
         # linux
+        k=list()
         sys_net='/sys/class/net'
         for dev in os.listdir(sys_net):
             with open(os.path.join(os.path.join(sys_net, dev), 'address')) as f:
-                return dev, f.read(),
+                p=dev,f.read()
+                k.append(p)
+        T1.insert(END,k)
     elif platform == "win32":
         # Windows...
-        return (':'.join(re.findall('..', '%012x' % uuid.getnode())))
+        T1.insert(END,':'.join(re.findall('..', '%012x' % uuid.getnode())))
+
+def macchange1():
+    if platform == "linux" or platform == "linux2":
+        os.system('ifconfig eth0 down')
+        os.system('macchanger -r eth0')
+        os.system('ifconfig eth0 up')
+
+def randommacchange():
+    macchange1()
+    currentmac()
+
+def custommacchange():
+    os.system('ifconfig eth0 down')
+    dire=T.get("1.0",'end-1c')
+    os.system('ifconfig eth0 down')
+    os.system('macchanger -m'+(dire)+' eth0')
+    os.system('ifconfig eth0 up')
+    currentmac()
+
+def originalmac():
+    os.system('macchanger -p eth0')
+    currentmac()
+        
+
 
 
 root = Tk()
@@ -30,15 +57,14 @@ title = Label(frame_top,text="MAC CHANGER",fg="red")
 title.config(font=("Courier bold", 34))
 
 frame_center  = Frame(root, width=790, height=840, bg="#9dc8e3")
-b1=Button(frame_center, height=1, width=30, padx=10, pady=10, text="CHANGE MAC RANDOMLY",cursor="hand2")
-b2=Button(frame_center, height=2, width=50, padx=10, pady=10, text="CHANGE TO SPECIFIED MAC ADDRESS",cursor="hand2")
+b1=Button(frame_center, height=1, width=30, padx=10, pady=10, text="CHANGE MAC RANDOMLY",cursor="hand2",command=randommacchange)
+b2=Button(frame_center, height=2, width=50, padx=10, pady=10, text="CHANGE TO SPECIFIED MAC ADDRESS",cursor="hand2",command=custommacchange)
 T = Text(frame_center, height=2, width=35)
 T1 = Text(frame_center, height=2, width=35)
 Entry(frame_center, justify='center')
 L = Label(frame_center,text="CURRENT MAC ADDRESS",fg="red")
-cm=currentmac()
-T1.insert(END,cm)
-b3=Button(frame_center, height=1, width=30, padx=10, pady=10, text="RESET MAC TO ORIGINAL",cursor="hand2")
+currentmac()
+b3=Button(frame_center, height=1, width=30, padx=10, pady=10, text="RESET MAC TO ORIGINAL",cursor="hand2",command=originalmac)
 
 frame_center.grid_rowconfigure(1,weight=1)
 frame_center.grid_columnconfigure(0,weight=1)
