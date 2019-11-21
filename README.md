@@ -1,5 +1,5 @@
 # toolkit
-Ethical hacking Toolkit for Windows
+Ethical hacking Toolkit for Windows and linux
 
 1 : keylogger
 2 : macchanger
